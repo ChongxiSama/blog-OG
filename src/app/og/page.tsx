@@ -1,10 +1,10 @@
-import { Container, Box } from '@mui/material'
+import { redirect } from 'next/navigation'
 
 type SearchParams = {
-  title?: string
-  date?: string
-  tag?: string
-  license?: string
+  title?: string | string[]
+  date?: string | string[]
+  tag?: string | string[]
+  license?: string | string[]
 }
 
 export default async function OgPage({
@@ -14,31 +14,21 @@ export default async function OgPage({
 }) {
   const resolved = await searchParams
   const params = new URLSearchParams()
-  if (resolved.title) params.set('title', resolved.title)
-  if (resolved.date) params.set('date', resolved.date)
-  if (resolved.tag) params.set('tag', resolved.tag)
-  if (resolved.license) params.set('license', resolved.license)
+  const pick = (value?: string | string[]) =>
+    Array.isArray(value) ? value[0] : value
+
+  const title = pick(resolved.title)
+  const date = pick(resolved.date)
+  const tag = pick(resolved.tag)
+  const license = pick(resolved.license)
+
+  if (title) params.set('title', title)
+  if (date) params.set('date', date)
+  if (tag) params.set('tag', tag)
+  if (license) params.set('license', license)
 
   const query = params.toString()
   const ogUrl = query ? `/api/og?${query}` : '/api/og'
 
-  return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box
-        sx={{
-          width: '100%',
-          aspectRatio: '16 / 9',
-          borderRadius: 2,
-          overflow: 'hidden',
-          bgcolor: 'grey.100',
-        }}
-      >
-        <img
-          src={ogUrl}
-          alt="OG"
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-      </Box>
-    </Container>
-  )
+  redirect(ogUrl)
 }
