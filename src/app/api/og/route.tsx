@@ -133,17 +133,16 @@ export async function GET(request: NextRequest) {
         }}
       />
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          height: '100%',
-          position: 'relative',
-          zIndex: 1,
-          padding: '60px',
-        }}
-      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            height: '100%',
+            position: 'relative',
+            padding: '60px',
+          }}
+        >
         <div
           style={{
             display: 'flex',
@@ -187,6 +186,8 @@ export async function GET(request: NextRequest) {
               fontFamily: '"JetBrains Mono", monospace',
               fontWeight: 700,
               marginLeft: '18px',
+              display: 'flex',
+              gap: '6px',
             }}
           >
             PROTOCOL: {license}
