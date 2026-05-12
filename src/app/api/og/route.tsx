@@ -73,6 +73,7 @@ export async function GET(request: NextRequest) {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
+          objectPosition: 'center bottom',
           top: 0,
           left: 0,
         }}
@@ -321,12 +322,7 @@ export async function GET(request: NextRequest) {
   })
 
   const { Resvg } = await import('@resvg/resvg-js')
-  const resvg = new Resvg(svg, {
-    fitTo: {
-      mode: 'width',
-      value: 1200,
-    },
-  })
+  const resvg = new Resvg(svg)
   const pngData = resvg.render()
   const pngBuffer = pngData.asPng()
   const body = new Uint8Array(pngBuffer)
