@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { ImageResponse } from '@vercel/og'
+import satori from 'satori'
 import path from 'path'
 import { readFile } from 'fs/promises'
 
@@ -53,270 +53,287 @@ export async function GET(request: NextRequest) {
     throw new Error('Image assets are missing')
   }
 
-  return new ImageResponse(
-    (
-      <div
+  const element = (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: '#1a1a1a',
+        position: 'relative',
+        overflow: 'hidden',
+        fontFamily: '"Noto Sans SC", sans-serif',
+      }}
+    >
+      <img
+        src={backgroundImage}
         style={{
+          position: 'absolute',
           width: '100%',
           height: '100%',
+          objectFit: 'cover',
+          top: 0,
+          left: 0,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          top: 0,
+          left: 0,
+        }}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          top: '30px',
+          left: '30px',
+          width: '24px',
+          height: '24px',
+          borderTop: '2px solid rgba(255, 255, 255, 0.4)',
+          borderLeft: '2px solid rgba(255, 255, 255, 0.4)',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: '30px',
+          right: '30px',
+          width: '24px',
+          height: '24px',
+          borderTop: '2px solid rgba(255, 255, 255, 0.4)',
+          borderRight: '2px solid rgba(255, 255, 255, 0.4)',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '30px',
+          left: '30px',
+          width: '24px',
+          height: '24px',
+          borderBottom: '2px solid rgba(255, 255, 255, 0.4)',
+          borderLeft: '2px solid rgba(255, 255, 255, 0.4)',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '30px',
+          right: '30px',
+          width: '24px',
+          height: '24px',
+          borderBottom: '2px solid rgba(255, 255, 255, 0.4)',
+          borderRight: '2px solid rgba(255, 255, 255, 0.4)',
+        }}
+      />
+
+      <div
+        style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#1a1a1a',
+          justifyContent: 'space-between',
+          height: '100%',
           position: 'relative',
-          overflow: 'hidden',
-          fontFamily: '"Noto Sans SC", sans-serif',
+          zIndex: 1,
+          padding: '60px',
         }}
       >
-        <img
-          src={backgroundImage}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            top: 0,
-            left: 0,
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
-            top: 0,
-            left: 0,
-          }}
-        />
-
-        <div
-          style={{
-            position: 'absolute',
-            top: '30px',
-            left: '30px',
-            width: '24px',
-            height: '24px',
-            borderTop: '2px solid rgba(255, 255, 255, 0.4)',
-            borderLeft: '2px solid rgba(255, 255, 255, 0.4)',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            top: '30px',
-            right: '30px',
-            width: '24px',
-            height: '24px',
-            borderTop: '2px solid rgba(255, 255, 255, 0.4)',
-            borderRight: '2px solid rgba(255, 255, 255, 0.4)',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '30px',
-            left: '30px',
-            width: '24px',
-            height: '24px',
-            borderBottom: '2px solid rgba(255, 255, 255, 0.4)',
-            borderLeft: '2px solid rgba(255, 255, 255, 0.4)',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '30px',
-            right: '30px',
-            width: '24px',
-            height: '24px',
-            borderBottom: '2px solid rgba(255, 255, 255, 0.4)',
-            borderRight: '2px solid rgba(255, 255, 255, 0.4)',
-          }}
-        />
-
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
-            height: '100%',
-            position: 'relative',
-            zIndex: 1,
-            padding: '60px',
+            gap: '16px',
           }}
         >
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
+              alignItems: 'center',
+              gap: '12px',
             }}
           >
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
+                width: '6px',
+                height: '32px',
+                backgroundColor: '#D95A2B',
               }}
-            >
-              <div
-                style={{
-                  width: '6px',
-                  height: '32px',
-                  backgroundColor: '#D95A2B',
-                }}
-              />
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  color: 'rgba(224, 224, 224, 0.8)',
-                  fontSize: '18px',
-                  fontFamily: '"JetBrains Mono", monospace',
-                  fontWeight: 700,
-                }}
-              >
-                <span>CHAPTER_POST // FIELD_REPORT</span>
-                <span>SYS_DATE: {date}</span>
-              </div>
-            </div>
+            />
             <div
               style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%',
                 color: 'rgba(224, 224, 224, 0.8)',
                 fontSize: '18px',
                 fontFamily: '"JetBrains Mono", monospace',
                 fontWeight: 700,
-                marginLeft: '18px',
               }}
             >
-              PROTOCOL: {license}
+              <span>CHAPTER_POST // FIELD_REPORT</span>
+              <span>SYS_DATE: {date}</span>
             </div>
           </div>
+          <div
+            style={{
+              color: 'rgba(224, 224, 224, 0.8)',
+              fontSize: '18px',
+              fontFamily: '"JetBrains Mono", monospace',
+              fontWeight: 700,
+              marginLeft: '18px',
+            }}
+          >
+            PROTOCOL: {license}
+          </div>
+        </div>
 
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '24px',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '72px',
+              fontWeight: 700,
+              color: 'white',
+              textShadow: '0 2px 8px rgba(0,0,0,0.8)',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              lineHeight: '1.2',
+            }}
+          >
+            {title}
+          </div>
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column',
-              gap: '24px',
+              alignItems: 'center',
+              gap: '8px',
+              alignSelf: 'flex-start',
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              color: 'white',
+              padding: '8px 16px',
+              fontSize: '18px',
+              border: '1px solid white',
+              borderRadius: '4px',
+              fontFamily: '"JetBrains Mono", monospace',
+              fontWeight: 700,
             }}
           >
-            <div
-              style={{
-                fontSize: '72px',
-                fontWeight: 700,
-                color: 'white',
-                textShadow: '0 2px 8px rgba(0,0,0,0.8)',
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                lineHeight: '1.2',
-              }}
-            >
-              {title}
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                alignSelf: 'flex-start',
-                backgroundColor: 'rgba(0,0,0,0.6)',
-                color: 'white',
-                padding: '8px 16px',
-                fontSize: '18px',
-                border: '1px solid white',
-                borderRadius: '4px',
-                fontFamily: '"JetBrains Mono", monospace',
-                fontWeight: 700,
-              }}
-            >
-              #{tag}
-            </div>
+            #{tag}
           </div>
+        </div>
 
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+          }}
+        >
           <div
             style={{
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
+              alignItems: 'center',
+              gap: '16px',
             }}
           >
+            <img
+              src={avatarImage}
+              style={{
+                width: '72px',
+                height: '72px',
+                borderRadius: '8px',
+                objectFit: 'cover',
+              }}
+            />
             <div
               style={{
                 display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
+                flexDirection: 'column',
+                gap: '4px',
               }}
             >
-              <img
-                src={avatarImage}
-                style={{
-                  width: '72px',
-                  height: '72px',
-                  borderRadius: '8px',
-                  objectFit: 'cover',
-                }}
-              />
               <div
                 style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px',
+                  fontSize: '20px',
+                  fontWeight: 700,
+                  color: 'white',
                 }}
               >
-                <div
-                  style={{
-                    fontSize: '20px',
-                    fontWeight: 700,
-                    color: 'white',
-                  }}
-                >
-                  CHONGXI
-                </div>
-                <div
-                  style={{
-                    fontSize: '16px',
-                    color: 'rgba(224, 224, 224, 0.7)',
-                  }}
-                >
-                  ● 循此苦旅 直抵群星
-                </div>
+                CHONGXI
+              </div>
+              <div
+                style={{
+                  fontSize: '16px',
+                  color: 'rgba(224, 224, 224, 0.7)',
+                }}
+              >
+                ● 循此苦旅 直抵群星
               </div>
             </div>
-            <div
-              style={{
-                fontSize: '24px',
-                fontWeight: 700,
-                color: '#D95A2B',
-                textShadow: '0 0 20px rgba(217, 90, 43, 0.6)',
-                fontFamily: '"JetBrains Mono", monospace',
-              }}
-            >
-              xice.cx
-            </div>
+          </div>
+          <div
+            style={{
+              fontSize: '24px',
+              fontWeight: 700,
+              color: '#D95A2B',
+              textShadow: '0 0 20px rgba(217, 90, 43, 0.6)',
+              fontFamily: '"JetBrains Mono", monospace',
+            }}
+          >
+            xice.cx
           </div>
         </div>
       </div>
-    ),
-    {
-      width: 1200,
-      height: 630,
-      fonts: [
-        {
-          name: 'Noto Sans SC',
-          data: notoSansScBold,
-          style: 'normal',
-          weight: 700,
-        },
-        {
-          name: 'JetBrains Mono',
-          data: jetBrainsMonoBold,
-          style: 'normal',
-          weight: 700,
-        },
-      ],
-    }
+    </div>
   )
+
+  const svg = await satori(element, {
+    width: 1200,
+    height: 630,
+    fonts: [
+      {
+        name: 'Noto Sans SC',
+        data: notoSansScBold,
+        style: 'normal',
+        weight: 700,
+      },
+      {
+        name: 'JetBrains Mono',
+        data: jetBrainsMonoBold,
+        style: 'normal',
+        weight: 700,
+      },
+    ],
+  })
+
+  const { Resvg } = await import('@resvg/resvg-js')
+  const resvg = new Resvg(svg, {
+    fitTo: {
+      mode: 'width',
+      value: 1200,
+    },
+  })
+  const pngData = resvg.render()
+  const pngBuffer = pngData.asPng()
+  const body = new Uint8Array(pngBuffer)
+
+  return new Response(body, {
+    headers: {
+      'Content-Type': 'image/png',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
+  })
 }
