@@ -1,5 +1,7 @@
 import { NextRequest } from 'next/server'
 import { ImageResponse } from '@vercel/og'
+import path from 'path'
+import { readFile } from 'fs/promises'
 
 export const runtime = 'nodejs'
 
@@ -8,20 +10,21 @@ let jetBrainsMonoBold: ArrayBuffer | null = null
 let backgroundImage: string | null = null
 let avatarImage: string | null = null
 
-const loadFont = async (url: URL) => {
-  const response = await fetch(url)
-  if (!response.ok) {
-    throw new Error(`Font load failed: ${response.status}`)
-  }
-  return response.arrayBuffer()
+const toArrayBuffer = (buffer: Buffer) => {
+  const arrayBuffer = new ArrayBuffer(buffer.length)
+  new Uint8Array(arrayBuffer).set(buffer)
+  return arrayBuffer
 }
 
-const loadImageDataUrl = async (url: URL, mime: string) => {
-  const response = await fetch(url)
-  if (!response.ok) {
-    throw new Error(`Image load failed: ${response.status}`)
-  }
-  const buffer = Buffer.from(await response.arrayBuffer())
+const loadFont = async (relativePath: string) => {
+  const filePath = path.join(process.cwd(), 'public', relativePath)
+  const buffer = await readFile(filePath)
+  return toArrayBuffer(buffer)
+}
+
+const loadImageDataUrl = async (relativePath: string, mime: string) => {
+  const filePath = path.join(process.cwd(), 'public', relativePath)
+  const buffer = await readFile(filePath)
   return `data:${mime};base64,${buffer.toString('base64')}`
 }
 
@@ -31,29 +34,17 @@ export async function GET(request: NextRequest) {
   const tag = request.nextUrl.searchParams.get('tag') || 'DOCUMENT'
   const license = request.nextUrl.searchParams.get('license') || 'CC BY-NC-SA 4.0'
 
-  const baseUrl = new URL(request.url)
-
   if (!notoSansScBold) {
-    notoSansScBold = await loadFont(
-      new URL('/fonts/NotoSansSC-Bold.otf', baseUrl)
-    )
+    notoSansScBold = await loadFont('fonts/NotoSansSC-Bold.otf')
   }
   if (!jetBrainsMonoBold) {
-    jetBrainsMonoBold = await loadFont(
-      new URL('/fonts/JetBrainsMono-Bold.ttf', baseUrl)
-    )
+    jetBrainsMonoBold = await loadFont('fonts/JetBrainsMono-Bold.ttf')
   }
   if (!backgroundImage) {
-    backgroundImage = await loadImageDataUrl(
-      new URL('/og/background.png', baseUrl),
-      'image/png'
-    )
+    backgroundImage = await loadImageDataUrl('og/background.png', 'image/png')
   }
   if (!avatarImage) {
-    avatarImage = await loadImageDataUrl(
-      new URL('/og/avatar.png', baseUrl),
-      'image/png'
-    )
+    avatarImage = await loadImageDataUrl('og/avatar.png', 'image/png')
   }
   if (!notoSansScBold || !jetBrainsMonoBold) {
     throw new Error('Font assets are missing')
